@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="JournalSystem/JournalSystem.vcxproj" Id="40627b73-ed0d-4720-a50d-4ec2f29c45a0" />
+</Solution>
