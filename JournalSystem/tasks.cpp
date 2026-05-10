@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <sqlite3.h>
 
@@ -37,8 +37,47 @@ void init_db() {
 		std::cerr << "Error SQL: " << errorMessage << std::endl;
 		sqlite3_free(errorMessage);
 	}
-	else {
-		std::cout << "Working" << std::endl;
+
+	sqlite3_close(DB);
+}
+
+void add_group() {
+	sqlite3* DB;
+	std::string name;
+	int id;
+
+	if (sqlite3_open("journal.db", &DB) != SQLITE_OK) {
+		std::cerr << "Ошибка подключения к БД: " << sqlite3_errmsg(DB);
+		return;
 	}
+
+	std::cout << "Введите номер группы: ";
+	std::cin >> id;
+	std::cin.ignore();
+	std::cout << "Введите название группы: ";
+	getline(std::cin, name);
+
+	sqlite3_stmt* stmt;
+	const char* sql = "INSERT INTO groups (id, name) VALUES (?, ?);";
+
+	sqlite3_prepare_v2(DB, sql, -1, &stmt, 0);
+
+	sqlite3_bind_int(stmt, 1, id);
+	sqlite3_bind_text(stmt, 2, name.c_str(), -1 ,SQLITE_TRANSIENT);
+
+	if (sqlite3_step(stmt) == SQLITE_DONE) {
+		std::cout << "Успех! Группа создана." << std::endl;
+		std::cout << "\nНажмите Enter, чтобы продолжить...";
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cin.get();
+	}
+	else {
+		std::cout << "Возникла неизвестная ошибка: Не удалось создать группу.\nВозможно, группа с таким номером уже создана." << std::endl;
+		std::cout << "\nНажмите Enter, чтобы продолжить...";
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cin.get();
+	}
+
+	sqlite3_finalize(stmt);
 	sqlite3_close(DB);
 }
