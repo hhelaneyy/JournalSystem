@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /JournalSystem/journal.db
 *.db
+/JournalSystem/JournalSystem.vcxproj
+/JournalSystem/JournalSystem.vcxproj.filters
