@@ -346,36 +346,38 @@ void del_subject() {
 	sqlite3_close(DB);
 }
 
-void get_subjects() {
-	sqlite3* DB;
-	if (sqlite3_open("journal.db", &DB) != SQLITE_OK) {
-		std::cerr << "Ошибка открытия БД" << std::endl;
-		return;
-	}
-
-	const char* sql = "SELECT * FROM students;";
-	sqlite3_stmt* stmt;
-
-	if (sqlite3_prepare_v2(DB, sql, -1, &stmt, 0) != SQLITE_OK) {
-		std::cerr << "Ошибка подготовки запроса: " << sqlite3_errmsg(DB) << std::endl;
-		sqlite3_close(DB);
-		return;
-	}
-
-	std::cout << "\n" << std::left
-		<< std::setw(8) << "ID студента"
-		<< std::setw(8) << "ФИО"
-		<< std::setw(15) << "ID группы" << std::endl;
-
-	std::cout << std::string(71, '-') << std::endl;
-
-	while (sqlite3_step(stmt) == SQLITE_ROW) {
-		std::cout << std::left
-			<< std::setw(8) << sqlite3_column_int(stmt, 0)
-			<< std::setw(20) << (const char*)sqlite3_column_text(stmt, 1)
-			<< std::setw(8) << sqlite3_column_int(stmt, 2) << std::endl;
-	}
-
-	sqlite3_finalize(stmt);
-	sqlite3_close(DB);
-}
+// потом переписать под предметы
+//
+//void get_subjects() {
+//	sqlite3* DB;
+//	if (sqlite3_open("journal.db", &DB) != SQLITE_OK) {
+//		std::cerr << "Ошибка открытия БД" << std::endl;
+//		return;
+//	}
+//
+//	const char* sql = "SELECT * FROM students;";
+//	sqlite3_stmt* stmt;
+//
+//	if (sqlite3_prepare_v2(DB, sql, -1, &stmt, 0) != SQLITE_OK) {
+//		std::cerr << "Ошибка подготовки запроса: " << sqlite3_errmsg(DB) << std::endl;
+//		sqlite3_close(DB);
+//		return;
+//	}
+//
+//	std::cout << "\n" << std::left
+//		<< std::setw(8) << "ID студента"
+//		<< std::setw(8) << "ФИО"
+//		<< std::setw(15) << "ID группы" << std::endl;
+//
+//	std::cout << std::string(71, '-') << std::endl;
+//
+//	while (sqlite3_step(stmt) == SQLITE_ROW) {
+//		std::cout << std::left
+//			<< std::setw(8) << sqlite3_column_int(stmt, 0)
+//			<< std::setw(20) << (const char*)sqlite3_column_text(stmt, 1)
+//			<< std::setw(8) << sqlite3_column_int(stmt, 2) << std::endl;
+//	}
+//
+//	sqlite3_finalize(stmt);
+//	sqlite3_close(DB);
+//}
