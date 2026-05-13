@@ -4,5 +4,10 @@
 
 void init_db();
 void add_group();
+void del_group();
+void get_groups();
+void add_student();
+void del_student();
+void get_students();
 
 #endif
