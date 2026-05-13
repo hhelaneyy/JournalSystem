@@ -114,15 +114,15 @@ void menu3() {
         switch (choice) {
         case 1:
             system("cls");
-            add_group();
+            add_subject();
             break;
         case 2:
             system("cls");
-            del_group();
+            del_subject();
             break;
         case 3:
             system("cls");
-            get_groups();
+            // добавить сюда get_subjects потом (вот бы не забыть)
             break;
         case 0:
             system("cls");
@@ -137,42 +137,44 @@ void menu3() {
     }
 }
 
-void menu4() {
-    int choice;
-
-    while (true) {
-        system("cls");
-        std::cout << "=============УПРАВЛЕНИЕ ОЦЕНКАМИ============" << std::endl;
-        std::cout << "1. Добавить оценки" << std::endl;
-        std::cout << "2. Отредактировать оценки" << std::endl;
-        std::cout << "0. Выйти из программы" << std::endl;
-        std::cout << "============================================" << std::endl;
-        std::cout << "Ваш выбор: ";
-
-        if (!(std::cin >> choice)) {
-            std::cin.clear();
-            std::cin.ignore(1000, '\n');
-            continue;
-        }
-
-        switch (choice) {
-        case 1:
-            system("cls");
-            add_student();
-            break;
-        case 2:
-            system("cls");
-            del_student();
-            break;
-        case 0:
-            system("cls");
-            return;
-        default:
-            std::cout << "Введите корректное число!" << std::endl;
-        }
-
-        std::cout << "\nНажмите Enter, чтобы продолжить...";
-        std::cin.ignore(1000, '\n');
-        std::cin.get();
-    }
-}
+// потом разморозить!!
+// 
+//void menu4() {
+//    int choice;
+//
+//    while (true) {
+//        system("cls");
+//        std::cout << "=============УПРАВЛЕНИЕ ОЦЕНКАМИ============" << std::endl;
+//        std::cout << "1. Добавить оценки" << std::endl;
+//        std::cout << "2. Отредактировать оценки" << std::endl;
+//        std::cout << "0. Выйти из программы" << std::endl;
+//        std::cout << "============================================" << std::endl;
+//        std::cout << "Ваш выбор: ";
+//
+//        if (!(std::cin >> choice)) {
+//            std::cin.clear();
+//            std::cin.ignore(1000, '\n');
+//            continue;
+//        }
+//
+//        switch (choice) {
+//        case 1:
+//            system("cls");
+//            add_student();
+//            break;
+//        case 2:
+//            system("cls");
+//            del_student();
+//            break;
+//        case 0:
+//            system("cls");
+//            return;
+//        default:
+//            std::cout << "Введите корректное число!" << std::endl;
+//        }
+//
+//        std::cout << "\nНажмите Enter, чтобы продолжить...";
+//        std::cin.ignore(1000, '\n');
+//        std::cin.get();
+//    }
+//}
