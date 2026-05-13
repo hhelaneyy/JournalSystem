@@ -298,7 +298,7 @@ void add_subject() {
 		std::cout << "Успех! Предмет добавлен." << std::endl;
 	}
 	else {
-		std::cout << "Возникла неизвестная ошибка: Не удалось создать студента.\nВозможно, студент с таким номером уже создан." << std::endl;
+		std::cout << "Возникла неизвестная ошибка: Не удалось создать предмет.\nВозможно, предмет с таким номером уже создан." << std::endl;
 	}
 
 	sqlite3_finalize(stmt);
@@ -314,29 +314,29 @@ void del_subject() {
 		return;
 	}
 
-	std::cout << "Введите ID студента: ";
+	std::cout << "Введите ID предмета: ";
 	std::cin >> id;
 	std::cin.ignore();
 
 	sqlite3_stmt* stmt;
-	const char* sql = "DELETE FROM students WHERE id = ?;";
+	const char* sql = "DELETE FROM subjects WHERE id = ?;";
 
 	sqlite3_prepare_v2(DB, sql, -1, &stmt, 0);
 	sqlite3_bind_int(stmt, 1, id);
 
 	if (sqlite3_step(stmt) == SQLITE_DONE) {
 		if (sqlite3_changes(DB) > 0) {
-			std::cout << "Успех! Студент удалён." << std::endl;
+			std::cout << "Успех! Предмет удалён." << std::endl;
 		}
 		else {
-			std::cout << "Возникла ошибка: Не удалось удалить студента.\nВозможно, студента с таким ID не существует." << std::endl;
+			std::cout << "Возникла ошибка: Не удалось удалить предмет.\nВозможно, предмета с таким ID не существует." << std::endl;
 			std::cout << "\nНажмите Enter, чтобы продолжить...";
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cin.get();
 		}
 	}
 	else {
-		std::cout << "Возникла неизвестная ошибка: Не удалось удалить студента." << std::endl;
+		std::cout << "Возникла неизвестная ошибка: Не удалось удалить предмет." << std::endl;
 		std::cout << "\nНажмите Enter, чтобы продолжить...";
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		std::cin.get();
