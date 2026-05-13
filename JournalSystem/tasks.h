@@ -9,5 +9,7 @@ void get_groups();
 void add_student();
 void del_student();
 void get_students();
+void add_subject();
+void del_subject();
 
 #endif
