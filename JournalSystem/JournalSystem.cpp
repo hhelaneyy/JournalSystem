@@ -37,6 +37,10 @@ int main() {
             system("cls");
             menu3();
             break;
+        case 4:
+            system("cls");
+            menu4();
+            break;
         case 0:
             system("cls");
             std::cout << "Выход из программы..." << std::endl;
