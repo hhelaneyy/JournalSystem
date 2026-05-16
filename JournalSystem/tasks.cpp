@@ -191,6 +191,7 @@ void add_student() {
 	}
 
 	sqlite3_finalize(stmt);
+	sqlite3_finalize(stmt2);
 	sqlite3_close(DB);
 }
 
@@ -346,38 +347,160 @@ void del_subject() {
 	sqlite3_close(DB);
 }
 
-// потом переписать под предметы
-//
-//void get_subjects() {
-//	sqlite3* DB;
-//	if (sqlite3_open("journal.db", &DB) != SQLITE_OK) {
-//		std::cerr << "Ошибка открытия БД" << std::endl;
-//		return;
-//	}
-//
-//	const char* sql = "SELECT * FROM students;";
-//	sqlite3_stmt* stmt;
-//
-//	if (sqlite3_prepare_v2(DB, sql, -1, &stmt, 0) != SQLITE_OK) {
-//		std::cerr << "Ошибка подготовки запроса: " << sqlite3_errmsg(DB) << std::endl;
-//		sqlite3_close(DB);
-//		return;
-//	}
-//
-//	std::cout << "\n" << std::left
-//		<< std::setw(8) << "ID студента"
-//		<< std::setw(8) << "ФИО"
-//		<< std::setw(15) << "ID группы" << std::endl;
-//
-//	std::cout << std::string(71, '-') << std::endl;
-//
-//	while (sqlite3_step(stmt) == SQLITE_ROW) {
-//		std::cout << std::left
-//			<< std::setw(8) << sqlite3_column_int(stmt, 0)
-//			<< std::setw(20) << (const char*)sqlite3_column_text(stmt, 1)
-//			<< std::setw(8) << sqlite3_column_int(stmt, 2) << std::endl;
-//	}
-//
-//	sqlite3_finalize(stmt);
-//	sqlite3_close(DB);
-//}
+void get_subjects() {
+	sqlite3* DB;
+	if (sqlite3_open("journal.db", &DB) != SQLITE_OK) {
+		std::cerr << "Ошибка открытия БД" << std::endl;
+		return;
+	}
+
+	const char* sql = "SELECT * FROM subjects;";
+	sqlite3_stmt* stmt;
+
+	if (sqlite3_prepare_v2(DB, sql, -1, &stmt, 0) != SQLITE_OK) {
+		std::cerr << "Ошибка подготовки запроса: " << sqlite3_errmsg(DB) << std::endl;
+		sqlite3_close(DB);
+		return;
+	}
+
+	std::cout << "\n" << std::left
+		<< std::setw(8) << "ID предмета"
+		<< std::setw(8) << "Название предмета" << std::endl;
+
+	std::cout << std::string(71, '-') << std::endl;
+
+	while (sqlite3_step(stmt) == SQLITE_ROW) {
+		std::cout << std::left
+			<< std::setw(8) << sqlite3_column_int(stmt, 0)
+			<< std::setw(20) << (const char*)sqlite3_column_text(stmt, 1) << std::endl;
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_close(DB);
+}
+
+void add_marks() {
+	sqlite3* DB;
+	int id, studid, subid, value, attempt;
+
+	if (sqlite3_open("journal.db", &DB) != SQLITE_OK) {
+		std::cerr << "Ошибка открытия БД" << std::endl;
+		return;
+	}
+
+	const char* sql = "INSERT INTO grades (id, student_id, subject_id, value, attempt) VALUES (?, ?, ?, ?, ?);";
+	sqlite3_stmt* stmt;
+	const char* sql2 = "SELECT EXISTS(SELECT 1 FROM students WHERE id=?) AND EXISTS(SELECT 1 FROM subjects WHERE id=?);";
+	sqlite3_stmt* stmt2;
+
+	if (sqlite3_prepare_v2(DB, sql, -1, &stmt, 0) != SQLITE_OK) {
+		std::cerr << "Ошибка подготовки запроса: " << sqlite3_errmsg(DB) << std::endl;
+		sqlite3_close(DB);
+		return;
+	}
+	if (sqlite3_prepare_v2(DB, sql2, -1, &stmt2, 0) != SQLITE_OK) {
+		std::cerr << "Ошибка подготовки запроса: " << sqlite3_errmsg(DB) << std::endl;
+		sqlite3_finalize(stmt);
+		sqlite3_close(DB);
+		return;
+	}
+
+	std::cout << "Введите ID оценки: ";
+	std::cin >> id;
+	std::cin.ignore();
+	std::cout << "Введите ID студента: ";
+	std::cin >> studid;
+	std::cin.ignore();
+	std::cout << "Введите ID предмета: ";
+	std::cin >> subid;
+	std::cin.ignore();
+	std::cout << "Введите оценку: ";
+	std::cin >> value;
+	std::cin.ignore();
+	std::cout << "Введите кол-во попыток: ";
+	std::cin >> attempt;
+	std::cin.ignore();
+
+	sqlite3_bind_int(stmt2, 1, studid);
+	sqlite3_bind_int(stmt2, 2, subid);
+	sqlite3_step(stmt2);
+
+	int exists = sqlite3_column_int(stmt2, 0);
+
+	if (exists == 1) {
+		sqlite3_finalize(stmt2);
+		sqlite3_bind_int(stmt, 1, id);
+		sqlite3_bind_int(stmt, 2, studid);
+		sqlite3_bind_int(stmt, 3, subid);
+		sqlite3_bind_int(stmt, 4, value);
+		sqlite3_bind_int(stmt, 5, attempt);
+
+		if (sqlite3_step(stmt) == SQLITE_DONE) {
+			std::cout << "Успешно! Студент получил оценку." << std::endl;
+		}
+		else {
+			std::cout << "Возникла непредвиденная ошибка: Не удалось добавить оценку.\nВозможно, оценка с таким ID уже существует." << std::endl;
+		}
+	}
+	else {
+		std::cout << "Возникла непредвиденная ошибка: Не удалось добавить оценку.\nВероятно, вы неверно указали ID предмета или студента." << std::endl;
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_close(DB);
+}
+
+void edit_marks() {
+	sqlite3* DB;
+	int id, value, attempts;
+
+	if (sqlite3_open("journal.db", &DB) != SQLITE_OK) {
+		std::cerr << "Ошибка открытия БД" << std::endl;
+		return;
+	}
+
+	const char* sql = "SELECT attempt FROM grades WHERE id=?;";
+	sqlite3_stmt* stmt;
+	const char* sql2 = "UPDATE grades SET value=?, attempt=? WHERE id=?;";
+	sqlite3_stmt* stmt2;
+
+	if (sqlite3_prepare_v2(DB, sql, -1, &stmt, 0) != SQLITE_OK) {
+		std::cerr << "Ошибка подготовки запроса: " << sqlite3_errmsg(DB) << std::endl;
+		sqlite3_close(DB);
+		return;
+	}
+	if (sqlite3_prepare_v2(DB, sql2, -1, &stmt2, 0) != SQLITE_OK) {
+		std::cerr << "Ошибка подготовки запроса: " << sqlite3_errmsg(DB) << std::endl;
+		sqlite3_finalize(stmt);
+		sqlite3_close(DB);
+		return;
+	}
+
+	std::cout << "Введите ID оценки: ";
+	std::cin >> id;
+	std::cin.ignore();
+	std::cout << "Введите новую оценку: ";
+	std::cin >> value;
+	std::cin.ignore();
+	std::cout << "Введите сколько попыток добавить: ";
+	std::cin >> attempts;
+	std::cin.ignore();
+
+	sqlite3_bind_int(stmt, 1, id);
+	sqlite3_step(stmt);
+	int new_attempt = sqlite3_column_int(stmt, 0) + attempts;
+	sqlite3_bind_int(stmt2, 1, value);
+	sqlite3_bind_int(stmt2, 2, new_attempt);
+	sqlite3_bind_int(stmt2, 3, id);
+
+	if (sqlite3_step(stmt2) == SQLITE_DONE) {
+		std::cout << "Успешно! Оценка была изменена." << std::endl;
+	}
+	else {
+		std::cout << "Возникла непредвиденная ошибка: Не удалось изменить оценку.\nВозможно, оценка с таким ID не существует." << std::endl;
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_finalize(stmt2);
+	sqlite3_close(DB);
+}
