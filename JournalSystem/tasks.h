@@ -14,5 +14,6 @@ void del_subject();
 void get_subjects();
 void add_marks();
 void edit_marks();
+void get_average_mark();
 
 #endif

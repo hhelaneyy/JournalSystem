@@ -504,3 +504,46 @@ void edit_marks() {
 	sqlite3_finalize(stmt2);
 	sqlite3_close(DB);
 }
+
+void get_average_mark() {
+	sqlite3* DB;
+	int id;
+
+	if (sqlite3_open("journal.db", &DB) != SQLITE_OK) {
+		std::cerr << "Ошибка открытия БД" << std::endl;
+		return;
+	}
+
+	std::cout << "Введите ID студента: ";
+	std::cin >> id;
+
+	const char* sql = "SELECT value FROM grades WHERE student_id = ?;";
+	sqlite3_stmt* stmt;
+
+	if (sqlite3_prepare_v2(DB, sql, -1, &stmt, 0) != SQLITE_OK) {
+		std::cerr << "Ошибка подготовки запроса: " << sqlite3_errmsg(DB) << std::endl;
+		sqlite3_close(DB);
+		return;
+	}
+
+	sqlite3_bind_int(stmt, 1, id);
+
+	int sum = 0;
+	int count = 0;
+
+	while (sqlite3_step(stmt) == SQLITE_ROW) {
+		sum += sqlite3_column_int(stmt, 0);
+		count++;
+	}
+
+	if (count > 0) {
+		double avg = static_cast<double>(sum) / count;
+		std::cout << "Средний балл студента равняется = " << avg << std::endl;
+	}
+	else {
+		std::cout << "У студента с ID " << id << " нет никаких оценок.\nНаверное, он не аттестован ;)" << std::endl;
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_close(DB);
+}
