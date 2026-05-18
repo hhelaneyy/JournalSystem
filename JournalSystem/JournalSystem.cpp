@@ -14,6 +14,7 @@ int main() {
         std::cout << "2. Управление группами" << std::endl;
         std::cout << "3. Управление предметами" << std::endl;
         std::cout << "4. Управление оценками" << std::endl;
+        std::cout << "5. Высчитать средний балл" << std::endl;
         std::cout << "0. Выйти из программы" << std::endl;
         std::cout << "============================================" << std::endl;
         std::cout << "Ваш выбор: ";
@@ -40,6 +41,10 @@ int main() {
         case 4:
             system("cls");
             menu4();
+            break;
+        case 5:
+            system("cls");
+            get_average_mark();
             break;
         case 0:
             system("cls");
