@@ -3,7 +3,6 @@
 > **Система учёта студентов** — консольное C++ приложение для управления записями об успеваемости и посещаемости студентов.
 
 [![Language](https://img.shields.io/badge/language-C%2B%2B-blue.svg)](https://isocpp.org/)
-[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE.txt)
 [![Platform](https://img.shields.io/badge/platform-Windows%20x64%20%7C%20x86-lightgrey.svg)](#сборка)
 
 ---
@@ -21,7 +20,6 @@ JournalSystem — десктопное приложение на C++, предн
 | Язык | C++ (98.3%), C (1.7%) |
 | IDE / Build system | Visual Studio (`.slnx` / `.vcxproj`) |
 | Целевые платформы | Windows x64, x86 |
-| Лицензия | Apache License 2.0 |
 
 ---
 
@@ -33,7 +31,6 @@ JournalSystem/
 ├── JournalSystem.slnx      # Solution-файл Visual Studio (новый XML-формат)
 ├── .gitignore
 ├── .gitattributes
-├── LICENSE.txt
 └── README.md
 ```
 
